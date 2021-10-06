@@ -8,7 +8,7 @@ namespace ParcialApp.Dominio
         public int Numero { get; set; }
         public DateTime Fecha { get; set; }
         public string Cliente { get; set; }
-        public string FormaPago { get; set; }
+        public int FormaPago { get; set; }
         public double Total { get; set; }
         public DateTime FechaBaja { get; set; }
         public List<DetalleFactura> Detalles { get; set; }

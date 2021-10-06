@@ -52,7 +52,7 @@ namespace ParcialApp.Presentacion
                 MessageBox.Show("Debe ingresar una cantidad valida...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-            else if (ExisteProductoEnGrilla(dgvDetalles.Text))
+            else if (ExisteProductoEnGrilla(cboProducto.Text))
             {
                         MessageBox.Show("El producto ya fue ingresado...", "Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         return;
@@ -68,15 +68,17 @@ namespace ParcialApp.Presentacion
                 int cant = Convert.ToInt32(nudCantidad.Text);
                 DetalleFactura d = new DetalleFactura(p, cant);
                 factura = new Factura();
+                
                 factura.AgregarDetalle(d);
-                dgvDetalles.Rows.Add(new object[] { producto, nom, precio, cant });
+                dgvDetalles.Rows.Add(new object[] { producto, nom, precio, cant, d.CalcularSubtotal() });
 
                 CalcularTotales();
             }
         }
         private void CalcularTotales()
         {
-            lblTotal.Text = "Total:" + factura.CalcularTotal().ToString();
+            lblSubtotal.Text = "Subtotal " + factura.CalcularTotal().ToString();
+            lblTotal.Text = "Total " + factura.CalcularTotal().ToString();
         }
 
         private bool ExisteProductoEnGrilla(string text)
@@ -120,7 +122,11 @@ namespace ParcialApp.Presentacion
         {
             factura.Fecha = Convert.ToDateTime(dtpFecha.Text);
             factura.Cliente = txtCliente.Text;
+            factura.FormaPago = cboForma.SelectedIndex;
             factura.Total = factura.CalcularTotal();
+            factura.FechaBaja = Convert.ToDateTime(dtpFecha.Text);
+            factura.Numero = _gestorFactura.ProximoNro();
+
             if (_gestorFactura.Crear(factura))
             {
                 MessageBox.Show("La factura se grabó correctamente!", "Notificación", MessageBoxButtons.OK, MessageBoxIcon.Information);
